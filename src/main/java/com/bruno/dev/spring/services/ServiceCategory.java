@@ -13,6 +13,6 @@ public class ServiceCategory {
     private RepositoryCategory repo;
 
     public Category search(Long id) {
-        return repo.findById(id).get();
+        return repo.findById(id).orElseThrow(CategoryNotFoundException::new);
     }
 }
