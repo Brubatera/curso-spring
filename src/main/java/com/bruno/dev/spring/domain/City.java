@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,5 +22,6 @@ public class City implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "state_id")
+    @JsonManagedReference
     private State state;
 }

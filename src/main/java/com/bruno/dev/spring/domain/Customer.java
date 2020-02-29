@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import com.bruno.dev.spring.domain.enums.CustomerType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.xml.bind.v2.schemagen.episode.Package;
 
 @Getter
@@ -38,6 +39,7 @@ public class Customer implements Serializable {
 	private String cpfOrCnpj;
 	private Integer customerType;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "customer")
 	private List<Address> addresses = new ArrayList<>();
 

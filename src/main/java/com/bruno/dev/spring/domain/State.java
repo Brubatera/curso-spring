@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,6 @@ public class State implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "state")
+    @JsonBackReference
     private List<City> cities = new ArrayList<>();
 }
