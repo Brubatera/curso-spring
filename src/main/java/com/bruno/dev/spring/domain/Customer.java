@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,6 @@ import lombok.Setter;
 
 import com.bruno.dev.spring.domain.enums.CustomerType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sun.xml.bind.v2.schemagen.episode.Package;
 
 @Getter
 @Setter
@@ -47,6 +45,9 @@ public class Customer implements Serializable {
 	@CollectionTable(name = "TELEPHONE")
 	private Set<String> telephones = new HashSet<>();
 
+	@OneToMany(mappedBy = "customer")
+	private List<CustomerOrder> orders = new ArrayList<>();
+
 	public Customer(Long id, String name, String email, String cpfOrCnpj, CustomerType customerType) {
 		this.id = id;
 		this.name = name;
@@ -63,7 +64,3 @@ public class Customer implements Serializable {
 		this.customerType = customerType.getCod();
 	}
 }
-
-
-
-

@@ -1,5 +1,8 @@
 package com.bruno.dev.spring;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,16 +14,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.bruno.dev.spring.domain.Address;
+import com.bruno.dev.spring.domain.BilletPayment;
 import com.bruno.dev.spring.domain.Category;
 import com.bruno.dev.spring.domain.City;
+import com.bruno.dev.spring.domain.CreditCardPayment;
 import com.bruno.dev.spring.domain.Customer;
+import com.bruno.dev.spring.domain.CustomerOrder;
+import com.bruno.dev.spring.domain.Payment;
 import com.bruno.dev.spring.domain.Product;
 import com.bruno.dev.spring.domain.State;
 import com.bruno.dev.spring.domain.enums.CustomerType;
+import com.bruno.dev.spring.domain.enums.PaymentState;
 import com.bruno.dev.spring.repositories.RepositoryAddress;
 import com.bruno.dev.spring.repositories.RepositoryCategory;
 import com.bruno.dev.spring.repositories.RepositoryCity;
 import com.bruno.dev.spring.repositories.RepositoryCustomer;
+import com.bruno.dev.spring.repositories.RepositoryOrder;
+import com.bruno.dev.spring.repositories.RepositoryPayment;
 import com.bruno.dev.spring.repositories.RepositoryProduct;
 import com.bruno.dev.spring.repositories.RepositoryState;
 
@@ -34,6 +44,8 @@ public class CursoUdemySpringApplication implements CommandLineRunner {
 	private RepositoryCity repositoryCity;
 	private RepositoryCustomer repositoryCustomer;
 	private RepositoryAddress repositoryAddress;
+	private RepositoryOrder repositoryOrder;
+	private RepositoryPayment repositoryPayment;
 
 	public static void main(String[] args) {
 		SpringApplication.run( CursoUdemySpringApplication.class, args );
@@ -143,5 +155,37 @@ public class CursoUdemySpringApplication implements CommandLineRunner {
 
 		repositoryCustomer.save( cl1 );
 		repositoryAddress.saveAll( Arrays.asList( ad1, ad2 ) );
+
+		CustomerOrder cso1 = CustomerOrder.builder()
+				.instant( LocalDate.of( 2020, 03, 8 ).atTime( 18, 17, 22 ) )
+				.customer( cl1 )
+				.deliveryAddress( ad1 )
+				.build();
+
+		CustomerOrder cso2 = CustomerOrder.builder()
+				.instant( LocalDate.of( 2020, 03, 8 ).atTime( LocalTime.now() ) )
+				.customer( cl1 )
+				.deliveryAddress( ad2 )
+				.build();
+
+		Payment pay1 = new CreditCardPayment(
+				null,
+				PaymentState.PAID,
+				cso1,
+				6 );
+		cso1.setPayment( pay1 );
+
+		Payment pay2 = new BilletPayment(
+				null,
+				PaymentState.PENDING,
+				cso2,
+				LocalDate.now(),
+				null );
+		cso2.setPayment( pay2 );
+
+		cl1.getOrders().addAll( Arrays.asList( cso1, cso2 ) );
+
+		repositoryOrder.saveAll( Arrays.asList( cso1, cso2 ) );
+		repositoryPayment.saveAll( Arrays.asList( pay1, pay2 ) );
 	}
 }
